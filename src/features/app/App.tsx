@@ -11,12 +11,19 @@ import { answerNumber } from "~/constants/answers";
 import { Grid } from "../grid/Grid";
 import { HelpModal } from "../help/HelpModal";
 import { Keyboard } from "../keyboard/Keyboard";
+import { SettingsModal } from "../settings/SettingsModal";
 
 export const App = () => {
   const {
     isOpen: isOpenHelpModal,
     onOpen: onOpenHelpModa,
     onClose: onCloseHelpModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenSettingsModal,
+    onOpen: onOpenSettingsModal,
+    onClose: onCloseSettingsModal,
   } = useDisclosure();
 
   return (
@@ -46,6 +53,10 @@ export const App = () => {
         <Keyboard />
       </Container>
       <HelpModal isOpen={isOpenHelpModal} onClose={onCloseHelpModal} />
+      <SettingsModal
+        isOpen={isOpenSettingsModal}
+        onClose={onCloseSettingsModal}
+      />
     </>
   );
 };
