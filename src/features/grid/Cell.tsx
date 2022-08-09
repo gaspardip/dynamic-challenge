@@ -1,21 +1,23 @@
 import { Flex, FlexProps } from "@chakra-ui/react";
 import { memo } from "react";
+import { useCharacterStatusProps } from "~/hooks/useCharacterStatusProps";
+import { CharacterStatus } from "~/hooks/useGetCharacterStatus";
 
 interface CellProps extends Omit<FlexProps, "children"> {
+  status?: CharacterStatus;
   children?: string;
-  isActive?: boolean;
 }
 
 export const Cell = memo(
-  ({ isActive = false, ...props }: CellProps) => {
+  ({ status, ...props }: CellProps) => {
+    const statusProps = useCharacterStatusProps(status);
+
     return (
       <Flex
+        borderColor={props.children ? "teal.700" : "teal.500"}
         {...props}
-        boxSize={16}
-        borderColor={
-          isActive ? "yellow.500" : props.children ? "teal.700" : "teal.500"
-        }
-        transform={isActive ? "scale(1.15)" : undefined}
+        {...statusProps}
+        boxSize={{ base: 12, md: 16 }}
         borderWidth={2}
         align="center"
         justify="center"
@@ -30,7 +32,11 @@ export const Cell = memo(
   },
   (prevProps, nextProps) =>
     prevProps.children === nextProps.children &&
-    prevProps.isActive === nextProps.isActive
+    prevProps.status === nextProps.status
 );
 
 Cell.displayName = "Cell";
+
+export const ActiveCell = (props: CellProps) => {
+  return <Cell {...props} borderColor="yellow.500" transform="scale(1.10)" />;
+};

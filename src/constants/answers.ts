@@ -206,8 +206,9 @@ export const { answer, answerNumber, answerIndex, tomorrow } = getAnswerOfDay();
 
 const sortStringAlphabetically = (str: string) => str.split("").sort().join("");
 
-export const isWinningAnswerExact = (other: string) => answer === other;
+export const isWinningAnswerExact = (answer: string, guess: string) =>
+  answer === guess;
 
-export const isWinningAnswer = (other: string) => {
-  return sortStringAlphabetically(answer) === sortStringAlphabetically(other);
+export const isWinningAnswer = (answer: string, guess: string) => {
+  return sortStringAlphabetically(answer) === sortStringAlphabetically(guess);
 };

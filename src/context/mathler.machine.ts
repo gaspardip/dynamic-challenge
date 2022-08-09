@@ -1,5 +1,10 @@
 import { assign, createMachine, InterpreterFrom, StateFrom } from "xstate";
-import { answer, answerNumber } from "~/constants/answers";
+import {
+  answer,
+  answerNumber,
+  isWinningAnswer,
+  isWinningAnswerExact,
+} from "~/constants/answers";
 import { CONFIG } from "~/constants/config";
 
 const initialContext = {
@@ -28,6 +33,7 @@ type SubmitGuessEvent = { type: "SUBMIT_GUESS" };
 
 const submitGuess = assign<MathlerContext, SubmitGuessEvent>({
   guesses: (context) => [...context.guesses, context.guess],
+  guess: initialContext.guess,
 });
 
 type MathlerEvent = AddCharacterEvent | RemoveCharacterEvent | SubmitGuessEvent;
@@ -42,7 +48,6 @@ export const mathlerMachine = createMachine<MathlerContext, MathlerEvent>(
     },
     states: {
       guessing: {
-        entry: "clearGuess",
         on: {
           ADD_CHARACTER: {
             cond: "canAddCharacter",
@@ -63,16 +68,14 @@ export const mathlerMachine = createMachine<MathlerContext, MathlerEvent>(
         },
       },
       revealing: {
-        after: {
-          500: [
-            { target: "#won", cond: "didPlayerWin" },
-            { target: "#lost", cond: "didPlayerLose" },
-            { target: "guessing" },
-          ],
-        },
+        always: [
+          { target: "#won", cond: "didPlayerWin" },
+          { target: "#lost", cond: "didPlayerLose" },
+          { target: "guessing" },
+        ],
       },
-      won: { id: "won", type: "final" },
-      lost: { id: "lost", type: "final" },
+      won: { id: "won", type: "final", entry: "notifyPlayerWon" },
+      lost: { id: "lost", type: "final", entry: "notifyPlayerLost" },
     },
   },
   {
@@ -80,10 +83,16 @@ export const mathlerMachine = createMachine<MathlerContext, MathlerEvent>(
       addCharacter,
       removeCharacter,
       submitGuess,
-      clearGuess: assign({ guess: "" }),
     } as any,
     guards: {
-      didPlayerWin: (ctx) => ctx.guess === ctx.answer,
+      didPlayerWin: ({ answer, guesses }) => {
+        const lastGuess = guesses.at(-1)!;
+
+        return (
+          isWinningAnswerExact(answer, lastGuess) ||
+          isWinningAnswer(answer, lastGuess)
+        );
+      },
       didPlayerLose: (ctx) => ctx.guesses.length === ctx.tries,
       canAddCharacter: (ctx, e) =>
         ctx.guess.length < ctx.answer.length &&

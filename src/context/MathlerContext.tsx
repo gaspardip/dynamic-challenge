@@ -45,6 +45,27 @@ export const MathlerProvider = ({ children }: MathlerProviderProps) => {
           isClosable: true,
         });
       },
+      notifyPlayerWon: () => {
+        toast({
+          title: "You won!",
+          description: "Congratulations!",
+          status: "success",
+          isClosable: true,
+        });
+      },
+      notifyPlayerLost: ({ answer }) => {
+        toast({
+          title: "You lost!",
+          description: (
+            <p>
+              You have no more guesses. <br />
+              The answer was {answer}
+            </p>
+          ),
+          status: "error",
+          isClosable: true,
+        });
+      },
     },
   });
 
@@ -67,13 +88,27 @@ export const useMathlerActor = () => {
   return useActor(mathlerService);
 };
 
-const selectAnswer = (state: MathlerState) => state.context.answer;
+export const useIsPlaying = () => {
+  const [state] = useMathlerActor();
 
-export const useAnswer = () => {
-  const service = useMathlerService();
-  const answer = useSelector(service, selectAnswer);
-
-  return answer;
+  return ["won", "lost"].every((s) => !state.matches(s));
 };
+
+const selectAnswer = (state: MathlerState) => state.context.answer;
+const selectGuess = (state: MathlerState) => state.context.guess;
+const selectGuesses = (state: MathlerState) => state.context.guesses;
+const selectTries = (state: MathlerState) => state.context.tries;
+
+const createSelectorHook = <T,>(selector: (state: MathlerState) => T) => {
+  return () => {
+    const mathlerService = useMathlerService();
+    return useSelector(mathlerService, selector);
+  };
+};
+
+export const useAnswer = createSelectorHook(selectAnswer);
+export const useGuess = createSelectorHook(selectGuess);
+export const useGuesses = createSelectorHook(selectGuesses);
+export const useTries = createSelectorHook(selectTries);
 
 export { MathlerContext };
