@@ -38,7 +38,7 @@ export const App = () => {
           </Heading>
           <IconButton aria-label="Statistics" icon={<SettingsIcon />} />
         </Flex>
-        <Text py={8} px={{ base: 4, md: 8 }} fontSize="lg">
+        <Text py={8} px={{ base: 4, md: 8 }} fontSize="lg" textAlign="center">
           Find the hidden calculation that equals{" "}
           <strong>{answerNumber}</strong>
         </Text>
