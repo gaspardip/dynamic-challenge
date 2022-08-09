@@ -88,12 +88,6 @@ export const useMathlerActor = () => {
   return useActor(mathlerService);
 };
 
-export const useIsPlaying = () => {
-  const [state] = useMathlerActor();
-
-  return ["won", "lost"].every((s) => !state.matches(s));
-};
-
 const selectAnswer = (state: MathlerState) => state.context.answer;
 const selectGuess = (state: MathlerState) => state.context.guess;
 const selectGuesses = (state: MathlerState) => state.context.guesses;

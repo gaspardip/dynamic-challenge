@@ -1,11 +1,10 @@
 import { StackProps, VStack } from "@chakra-ui/react";
-import { useGuesses, useIsPlaying, useTries } from "~/context/MathlerContext";
+import { useGuesses, useTries } from "~/context/MathlerContext";
 import { ActiveRow, EmptyRow, Row } from "./Row";
 
 export const Grid = (props: StackProps) => {
   const tries = useTries();
   const guesses = useGuesses();
-  const isPlaying = useIsPlaying();
 
   const emptyRows = Array.from({
     length: tries - guesses.length - 1,
@@ -16,7 +15,7 @@ export const Grid = (props: StackProps) => {
       {guesses.map((guess, index) => (
         <Row guess={guess} key={index} />
       ))}
-      {isPlaying && <ActiveRow />}
+      {guesses.length < tries && <ActiveRow />}
       {emptyRows.map((_, index) => (
         <EmptyRow key={index} />
       ))}
