@@ -43,7 +43,11 @@ export const App = () => {
           <Heading size="xl" m="0 auto">
             MATHLER
           </Heading>
-          <IconButton aria-label="Statistics" icon={<SettingsIcon />} />
+          <IconButton
+            aria-label="Statistics"
+            icon={<SettingsIcon />}
+            onClick={onOpenSettingsModal}
+          />
         </Flex>
         <Text py={8} px={{ base: 4, md: 8 }} fontSize="lg" textAlign="center">
           Find the hidden calculation that equals{" "}

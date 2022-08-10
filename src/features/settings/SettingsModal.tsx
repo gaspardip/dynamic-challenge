@@ -9,7 +9,7 @@ type SettingsModalProps = Omit<ModalProps, "children">;
 
 export const SettingsModal = (props: SettingsModalProps) => {
   return (
-    <Modal {...props}>
+    <Modal {...props} isCentered>
       <ModalOverlay />
       <ModalContent></ModalContent>
     </Modal>

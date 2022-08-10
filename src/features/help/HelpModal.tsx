@@ -20,7 +20,7 @@ export const HelpModal = (props: Omit<ModalProps, "children">) => {
   const tries = useTries();
 
   return (
-    <Modal {...props}>
+    <Modal {...props} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>How to play Mathler</ModalHeader>
@@ -35,7 +35,7 @@ export const HelpModal = (props: Omit<ModalProps, "children">) => {
               close you are to the solution.
             </ListItem>
           </UnorderedList>
-          <BaseRow py={spacing} justify="center">
+          <BaseRow py={spacing * 2} justify="center">
             <Cell status="correct">5</Cell>
             <Cell status="incorrect">0</Cell>
             <Cell status="correct">/</Cell>
